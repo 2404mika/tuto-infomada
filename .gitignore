@@ -1,0 +1,42 @@
+# Node (React frontend dans FRONT/)
+FRONT/node_modules/
+FRONT/build/
+FRONT/dist/
+FRONT/.env
+FRONT/.DS_Store
+FRONT/.parcel-cache/
+FRONT/.vite/
+FRONT/.next/
+FRONT/.turbo/
+FRONT/.bolt/
+
+# Django (backend dans BACK/)
+BACK/__pycache__/
+BACK/db.sqlite3
+BACK/staticfiles/
+BACK/media/
+BACK/.env
+BACK/*.pyc
+BACK/*.pyo
+BACK/*.log
+
+# Environnement virtuel Python (ajuste si nécessaire)
+BACK/venv/
+venv/
+
+# VSCode
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# General Python
+*.py[cod]
+*.egg-info/
+.eggs/
+*.log
+
+# Git
+*.swp
+*.swo

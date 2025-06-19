@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="login.css">
+    <title>INFOMADA</title>
+</head>
+<body>
+  <section class="body-login">
+    <div class="welcome">
+      <div class="title">
+        <h2><i>INFOMADA</i></h2>
+      </div>
+      <div class="welcome-text">
+        <h1><i></i>Bienvenue !</h1>
+        <h1 class="h1-text">Sur Notre plateforme de formation</h1>
+        <p>Apprenez à votre rythme, développez vos compétences et atteignez vos objectifs avec nous.</p>
+      </div>
+    </div>
+    <div class="div-form">
+      <h1>Se connecter</h1>
+      <form action="/cours/registration" class="form" method="POST">
+        {% csrf_token %}
+
+        {{ user_form.as_p}}
+
+        {{ etudiant_form.as_p}}
+        <button type="submit">S'inscrire</button>
+      </form>
+    </div>
+  </section>
+</body>
+</html>
