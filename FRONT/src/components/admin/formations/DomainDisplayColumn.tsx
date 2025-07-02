@@ -30,7 +30,7 @@ const DomainDisplayColumn: React.FC<DomainDisplayColumnProps> = ({
                             {domaines.map((domaine) =>
                                 <div key={domaine.id} className="flex items-center p-3 my-1.5 rounded-lg border border-dashed border-gray-300 bg-gray-50">
                                     <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full mr-3 bg-gray-200 text-gray-400 text-sm font-semibold">{domaine.id}</div>
-                                    <div className="h-4 rounded w-3/4 font-medium text-blue-950">{domaine.name}</div>
+                                    <div className="rounded w-3/4 font-medium text-blue-950">{domaine.name}</div>
                                 </div>
                             )}
                             

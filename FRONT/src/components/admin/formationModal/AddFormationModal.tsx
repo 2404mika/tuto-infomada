@@ -395,6 +395,13 @@
 
 // export default AddFormationModal;
 
+
+
+
+
+
+
+
 import { useState, useEffect } from "react";
 import FormInput from "../../common/FormInput";
 import ModalBase from "../../common/Modal";
@@ -784,3 +791,432 @@ const AddFormationModal: React.FC<AddFormationModalProps> = ({ isOpen, onClose, 
 };
 
 export default AddFormationModal;
+
+
+
+
+// import { useState, useEffect } from "react";
+// import FormInput from "../../common/FormInput";
+// import ModalBase from "../../common/Modal";
+// import Button from "../../common/Button";
+// import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+
+// // Définir les interfaces
+// interface Domaine {
+//   id: number;
+//   name: string;
+//   status: string;
+//   image?: string;
+// }
+
+// interface Prof {
+//   id: number;
+//   first_name: string;
+//   last_name: string;
+// }
+
+// interface Chapter {
+//   id?: number;
+//   chapter_name: string;
+//   description: string;
+//   chapter_number: number;
+//   videos: { id?: number; file: File | string | null; name: string }[];
+// }
+
+// interface Formation {
+//   id?: number;
+//   title: string;
+//   description: string;
+//   formation_domaine: Domaine;
+//   prof_id: Prof;
+//   parametre_formation_id?: { price: number; duration: string };
+//   chapters?: Chapter[];
+// }
+
+// interface AddFormationModalProps {
+//   isOpen: boolean;
+//   onClose: () => void;
+//   onFormationAddedOrUpdated: (formation: Formation) => void;
+//   selectedFormation?: Formation | null;
+// }
+
+// const AddFormationModal: React.FC<AddFormationModalProps> = ({ isOpen, onClose, onFormationAddedOrUpdated, selectedFormation }) => {
+//   const [formationDomaineInput, setFormationDomaineInput] = useState('');
+//   const [formationTitreInput, setFormationTitreInput] = useState('');
+//   const [formationDescriptionInput, setFormationDescriptionInput] = useState('');
+//   const [formationPriceInput, setFormationPriceInput] = useState('');
+//   const [formationDurationInput, setFormationDurationInput] = useState('30 00:00:00');
+//   const [formationProfInput, setFormationProfInput] = useState('');
+//   const [chapters, setChapters] = useState<Chapter[]>([{ chapter_name: '', description: '', chapter_number: 1, videos: [{ file: null, name: '' }] }]);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
+//   const [domains, setDomains] = useState<Domaine[]>([]);
+//   const [profs, setProfs] = useState<Prof[]>([]);
+
+//   // Déterminer si on est en mode édition
+//   const isEditMode = !!selectedFormation;
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         const domainsResponse = await fetch('http://localhost:8000/api/domaine/', {
+//           method: 'GET',
+//           headers: { 'Content-Type': 'application/json' },
+//         });
+//         if (domainsResponse.ok) {
+//           const domainsData = await domainsResponse.json();
+//           setDomains(domainsData);
+//         } else {
+//           throw new Error('Erreur lors de la récupération des domaines');
+//         }
+
+//         const profsResponse = await fetch('http://localhost:8000/api/prof/', {
+//           method: 'GET',
+//           headers: { 'Content-Type': 'application/json' },
+//         });
+//         if (profsResponse.ok) {
+//           const profsData = await profsResponse.json();
+//           setProfs(profsData);
+//         } else {
+//           throw new Error('Erreur lors de la récupération des professeurs');
+//         }
+//       } catch (err) {
+//         console.error(err);
+//         setError('Erreur lors du chargement des données');
+//       }
+//     };
+
+//     if (isOpen) {
+//       fetchData();
+//       if (selectedFormation) {
+//         // Remplir les champs pour l'édition
+//         setFormationTitreInput(selectedFormation.title);
+//         setFormationDescriptionInput(selectedFormation.description);
+//         setFormationPriceInput(selectedFormation.parametre_formation_id?.price.toString() || '');
+//         setFormationDurationInput(selectedFormation.parametre_formation_id?.duration || '30 00:00:00');
+//         setFormationDomaineInput(selectedFormation.formation_domaine.id.toString());
+//         setFormationProfInput(selectedFormation.prof_id.id.toString());
+//         setChapters(selectedFormation.chapters || [{ chapter_name: '', description: '', chapter_number: 1, videos: [{ file: null, name: '' }] }]);
+//       } else {
+//         // Réinitialiser les champs pour l'ajout
+//         setFormationDomaineInput('');
+//         setFormationTitreInput('');
+//         setFormationDescriptionInput('');
+//         setFormationPriceInput('');
+//         setFormationDurationInput('30 00:00:00');
+//         setFormationProfInput('');
+//         setChapters([{ chapter_name: '', description: '', chapter_number: 1, videos: [{ file: null, name: '' }] }]);
+//       }
+//       setError(null);
+//     }
+//   }, [isOpen, selectedFormation]);
+
+//   const validateForm = () => {
+//     if (
+//       !formationDomaineInput.trim() ||
+//       !formationTitreInput.trim() ||
+//       !formationDescriptionInput.trim() ||
+//       !formationPriceInput.trim() ||
+//       !formationDurationInput.trim() ||
+//       !formationProfInput.trim()
+//     ) {
+//       setError("Tous les champs principaux sont requis, y compris le domaine et le professeur");
+//       return false;
+//     }
+//     if (!profs.some(prof => prof.id.toString() === formationProfInput)) {
+//       setError("Veuillez sélectionner un professeur valide");
+//       return false;
+//     }
+//     if (!domains.some(domain => domain.id.toString() === formationDomaineInput)) {
+//       setError("Veuillez sélectionner un domaine valide");
+//       return false;
+//     }
+//     if (chapters.some(chapter => !chapter.chapter_name.trim() || !chapter.description.trim() || !chapter.chapter_number)) {
+//       setError("Les noms, descriptions et numéros des chapitres sont requis");
+//       return false;
+//     }
+//     setError(null);
+//     return true;
+//   };
+
+//   const addChapter = () => {
+//     setChapters([...chapters, { chapter_name: '', description: '', chapter_number: chapters.length + 1, videos: [{ file: null, name: '' }] }]);
+//   };
+
+//   const removeChapter = (index: number) => {
+//     setChapters(chapters.filter((_, i) => i !== index));
+//   };
+
+//   const addVideo = (chapterIndex: number) => {
+//     const newChapters = [...chapters];
+//     newChapters[chapterIndex].videos.push({ file: null, name: '' });
+//     setChapters(newChapters);
+//   };
+
+//   const removeVideo = (chapterIndex: number, videoIndex: number) => {
+//     const newChapters = [...chapters];
+//     newChapters[chapterIndex].videos = newChapters[chapterIndex].videos.filter((_, i) => i !== videoIndex);
+//     setChapters(newChapters);
+//   };
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+
+//     if (!validateForm()) {
+//       return;
+//     }
+
+//     setIsLoading(true);
+//     setError(null);
+
+//     const formData = new FormData();
+//     formData.append('title', formationTitreInput);
+//     formData.append('description', formationDescriptionInput);
+//     formData.append('parametre_formation_id[price]', formationPriceInput);
+//     formData.append('parametre_formation_id[duration]', formationDurationInput);
+//     formData.append('formation_domaine_write', formationDomaineInput);
+//     formData.append('prof_id_write', formationProfInput);
+
+//     chapters.forEach((chapter, chapterIndex) => {
+//       formData.append(`chapters_write[${chapterIndex}][chapter_name]`, chapter.chapter_name);
+//       formData.append(`chapters_write[${chapterIndex}][description]`, chapter.description);
+//       formData.append(`chapters_write[${chapterIndex}][chapter_number]`, chapter.chapter_number.toString());
+//       chapter.videos.forEach((video, videoIndex) => {
+//         if (video.file instanceof File) {
+//           formData.append(`chapters_write[${chapterIndex}][videos][${videoIndex}][file]`, video.file);
+//         }
+//         formData.append(`chapters_write[${chapterIndex}][videos][${videoIndex}][name]`, video.name);
+//       });
+//     });
+
+//     console.log("------ Contenu final du FormData qui sera envoyé ------");
+//     for (const pair of formData.entries()) {
+//       console.log(`${pair[0]}:`, pair[1]);
+//     }
+
+//     try {
+//       const url = isEditMode
+//         ? `http://localhost:8000/api/formation/${selectedFormation?.id}/`
+//         : 'http://localhost:8000/api/formation/';
+//       const method = isEditMode ? 'PUT' : 'POST';
+
+//       const response = await fetch(url, {
+//         method,
+//         body: formData,
+//       });
+
+//       const data = await response.json();
+
+//       if (response.ok) {
+//         alert(isEditMode ? "Formation modifiée avec succès !" : "Formation ajoutée avec succès !");
+//         onFormationAddedOrUpdated(data);
+//         onClose();
+//       } else {
+//         const errorMsg = data.formation_domaine_id?.[0] || data.prof_id_id?.[0] || JSON.stringify(data);
+//         console.log("Erreur retournée par l'API :", data);
+//         setError(`Erreur lors de ${isEditMode ? 'la modification' : "l'ajout"} : ${errorMsg}`);
+//       }
+//     } catch (err) {
+//       console.log("Erreur réseau ou de script :", err);
+//       setError('Une erreur réseau est survenue. Vérifiez votre connexion et la console.');
+//     } finally {
+//       setIsLoading(false);
+//     }
+//   };
+
+//   return (
+//     <ModalBase
+//       isOpen={isOpen}
+//       onClose={onClose}
+//       title={isEditMode ? `Modifier la formation: ${selectedFormation?.title || ''}` : "Ajouter une nouvelle formation"}
+//     >
+//       <div className="bg-white rounded-xl shadow-md p-8">
+//         <form onSubmit={handleSubmit}>
+//           {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
+//           <div>
+//             <label className="block text-sm font-medium text-gray-700">Sélectionner un domaine</label>
+//             <select
+//               value={formationDomaineInput}
+//               onChange={(e) => setFormationDomaineInput(e.target.value)}
+//               className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+//             >
+//               <option value="">Choisir un domaine</option>
+//               {domains.map((domain) => (
+//                 <option key={domain.id} value={domain.id}>
+//                   {domain.name}
+//                 </option>
+//               ))}
+//             </select>
+//           </div>
+//           <FormInput
+//             label="Titre de la formation"
+//             type="text"
+//             name="titre"
+//             value={formationTitreInput}
+//             onChange={(e) => setFormationTitreInput(e.target.value)}
+//           />
+//           <FormInput
+//             label="Description"
+//             type="textarea"
+//             name="description"
+//             placeholder="Votre description..."
+//             value={formationDescriptionInput}
+//             onChange={(e) => setFormationDescriptionInput(e.target.value)}
+//           />
+//           <label className="block text-sm font-medium text-gray-700 mt-2">Sélectionner un professeur</label>
+//           <select
+//             value={formationProfInput}
+//             onChange={(e) => setFormationProfInput(e.target.value)}
+//             className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm p-2"
+//           >
+//             <option value="">Choisir un professeur</option>
+//             {profs.map((prof) => (
+//               <option key={prof.id} value={prof.id}>
+//                 {prof.first_name} {prof.last_name}
+//               </option>
+//             ))}
+//           </select>
+//           <FormInput
+//             label="Prix en Ariary (Ar)"
+//             type="number"
+//             name="prix"
+//             value={formationPriceInput}
+//             onChange={(e) => setFormationPriceInput(e.target.value)}
+//           />
+//           <FormInput
+//             label="Durée (jours heures:minutes:secondes)"
+//             type="text"
+//             name="duration"
+//             placeholder="ex: 30 00:00:00"
+//             value={formationDurationInput}
+//             onChange={(e) => setFormationDurationInput(e.target.value)}
+//           />
+//           <div className="relative mt-4">
+//             <button
+//               type="button"
+//               className="bg-blue-900 hover:bg-blue-700 text-white font-medium flex justify-center items-center px-4 py-2.5 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 absolute top-4 right-4 z-10"
+//               onClick={addChapter}
+//             >
+//               <PlusIcon className="w-5 h-5 mr-1.5" />
+//               Ajouter un chapitre
+//             </button>
+//             <div
+//               className="mt-4 max-h-96 overflow-y-scroll border border-gray-300 rounded p-4"
+//               style={{ minHeight: '200px' }}
+//             >
+//               {chapters.map((chapter, index) => (
+//                 <div key={chapter.id || index} className="mb-6 p-4 border rounded relative">
+//                   <h3 className="text-lg font-semibold mb-2">Chapitre {index + 1}</h3>
+//                   <FormInput
+//                     label="Nom du chapitre"
+//                     type="text"
+//                     name={`chapterName-${index}`}
+//                     value={chapter.chapter_name}
+//                     onChange={(e) => {
+//                       const newChapters = [...chapters];
+//                       newChapters[index].chapter_name = e.target.value;
+//                       setChapters(newChapters);
+//                     }}
+//                   />
+//                   <FormInput
+//                     label="Numéro du chapitre"
+//                     type="number"
+//                     name={`chapterNumber-${index}`}
+//                     value={chapter.chapter_number}
+//                     onChange={(e) => {
+//                       const newChapters = [...chapters];
+//                       newChapters[index].chapter_number = parseInt(e.target.value) || 1;
+//                       setChapters(newChapters);
+//                     }}
+//                   />
+//                   <label className="block text-sm font-medium text-gray-700 mt-2">Importer les vidéos</label>
+//                   {chapter.videos.map((video, videoIndex) => (
+//                     <div key={video.id || videoIndex} className="mt-2">
+//                       <input
+//                         type="file"
+//                         accept="video/*"
+//                         onChange={(e) => {
+//                           const file = e.target.files ? e.target.files[0] : null;
+//                           const newChapters = [...chapters];
+//                           newChapters[index].videos[videoIndex].file = file;
+//                           newChapters[index].videos[videoIndex].name = file ? file.name : video.name;
+//                           setChapters(newChapters);
+//                         }}
+//                         className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100"
+//                       />
+//                       <input
+//                         type="text"
+//                         value={video.name}
+//                         onChange={(e) => {
+//                           const newChapters = [...chapters];
+//                           newChapters[index].videos[videoIndex].name = e.target.value;
+//                           setChapters(newChapters);
+//                         }}
+//                         placeholder="Nom personnalisé"
+//                         className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+//                       />
+//                       {chapter.videos.length > 1 && (
+//                         <button
+//                           type="button"
+//                           onClick={() => removeVideo(index, videoIndex)}
+//                           className="mt-2 text-red-500"
+//                         >
+//                           <TrashIcon className="w-5 h-5" />
+//                         </button>
+//                       )}
+//                     </div>
+//                   ))}
+//                   <button
+//                     type="button"
+//                     onClick={() => addVideo(index)}
+//                     className="mt-2 bg-blue-500 text-white px-2 py-1 rounded flex items-center"
+//                   >
+//                     <PlusIcon className="w-5 h-5 mr-2" /> Ajouter une vidéo
+//                   </button>
+//                   <FormInput
+//                     label="Description du chapitre"
+//                     type="textarea"
+//                     name={`chapterDescription-${index}`}
+//                     value={chapter.description}
+//                     onChange={(e) => {
+//                       const newChapters = [...chapters];
+//                       newChapters[index].description = e.target.value;
+//                       setChapters(newChapters);
+//                     }}
+//                   />
+//                   {chapters.length > 1 && (
+//                     <button
+//                       type="button"
+//                       onClick={() => removeChapter(index)}
+//                       className="mt-2 text-red-500 absolute top-2 right-2"
+//                     >
+//                       <TrashIcon className="w-5 h-5" />
+//                     </button>
+//                   )}
+//                 </div>
+//               ))}
+//             </div>
+//           </div>
+//           <div className="mt-6 flex justify-end gap-4">
+//             <Button
+//               type="button"
+//               onClick={onClose}
+//               className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+//             >
+//               Annuler
+//             </Button>
+//             <Button
+//               type="submit"
+//               isLoading={isLoading}
+//               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+//             >
+//               {isLoading ? (isEditMode ? 'Modification...' : 'Ajout...') : (isEditMode ? 'Valider' : 'Ajouter')}
+//             </Button>
+//           </div>
+//         </form>
+//       </div>
+//     </ModalBase>
+//   );
+// };
+
+// export default AddFormationModal;

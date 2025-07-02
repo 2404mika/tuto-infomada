@@ -11,7 +11,10 @@ interface NavItemprops{
 }
 
 const NavItem: React.FC<NavItemprops> = ({to, icon:Icon, label, currentPath}) =>{
-    const isActive = currentPath.startsWith(to);
+    const isActive = 
+    label === 'Gestion des formations'
+    ? currentPath.startsWith('/admin/Formations') || currentPath.startsWith('/user/formation/')
+    : currentPath.startsWith(to);
     return (
         <li>
             <Link to={to} className={`flex items-center space-x-3 px-7 my-2 py-3 rounded-2xl transition-colors duration-200 
@@ -32,9 +35,9 @@ const Sidebar: React.FC = () =>{
     const navLinks = [
         // {to:"/admin/Acceuil", icon:HomeIcon , label: 'Acceuil'},
         {to:"/admin/dashboard", icon:ChartBarIcon, label:'Tableau de bord'},
-        {to:"/admin/Formations", icon:BookOpenIcon, label:'Formations'},
-        {to: "/admin/etudiants",icon:UserIcon, label:'Etudiants'},
-        {to: "/admin/parametres",icon:Cog6ToothIcon, label:'Paramètres'},
+        {to:"/admin/Formations", icon:BookOpenIcon, label:' Gestion des formations'},
+        {to: "/admin/etudiants",icon:UserIcon, label:"Demandes d'accès"},
+        // {to: "/admin/parametres",icon:Cog6ToothIcon, label:'Paramètres'},
     ];
     return (
         <aside className="w-72 bg-primary-admin-sidebar-bg text-white flex flex-col inset-y-0 left-0 z-30 shadow-xl transform 

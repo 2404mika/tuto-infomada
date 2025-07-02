@@ -2,6 +2,7 @@
 import React from 'react';
 import {BellIcon, Cog6ToothIcon,Bars3Icon} from '@heroicons/react/24/outline';
 import { UserCircleIcon } from '@heroicons/react/24/solid'; // Pour l'avatar
+import { useNavigate } from 'react-router-dom';
 
 interface AdminHeaderProps {
   onLogout: () => void; // Fonction de déconnexion
@@ -12,6 +13,13 @@ interface AdminHeaderProps {
 }
 
 const AdminHeader: React.FC<AdminHeaderProps> = ({ onLogout, onToggleSidebar,onOpenProfModal, }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('adminEmail'); // Supprime les données de session
+    onLogout(); // Appelle la fonction onLogout passée en prop
+    navigate('/'); // Redirige vers la page de connexion
+  };
   return (
     <header className="bg-slate-100 sticky top-0 z-20 shadow-sm">
       <div className="container mx-auto sm:px-6 lg:px-8">
@@ -38,15 +46,14 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onLogout, onToggleSidebar,onO
 
           {/* Right side: Icons and User */}
           <div className="flex items-center space-x-4">
-            <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
+            {/* <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
               <span className="sr-only">View notifications</span>
               <BellIcon className="h-6 w-6" />
-              {/* Vous pouvez ajouter un badge de notification ici */}
             </button>
             <button className="p-2 rounded-full text-gray-500 hover:bg-gray-100 hover:text-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary">
               <span className="sr-only">Settings</span>
               <Cog6ToothIcon className="h-6 w-6" />
-            </button>
+            </button> */}
 
             <div className="relative">
               {/* Menu déroulant pour l'utilisateur - logique à ajouter */}
@@ -59,7 +66,7 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onLogout, onToggleSidebar,onO
               </button>
               {/* Dropdown menu ici si besoin */}
             </div>
-             <button onClick={onLogout} className="ml-2 text-sm text-red-700 hover:bg-red-200 p-3 bg-red-100 rounded-lg font-medium">Déconnexion</button>
+             <button onClick={handleLogout} className="ml-2 text-sm text-red-700 hover:bg-red-200 p-3 bg-red-100 rounded-lg font-medium">Déconnexion</button>
           </div>
         </div>
       </div>

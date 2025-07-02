@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSearchParams } from 'react-router-dom'
-import Button from '../components/common/Button'
+import Button from '../common/Button'
 import { CheckCircle, AlertTriangle } from 'lucide-react'
 
 const AccountActivated: React.FC = () => {

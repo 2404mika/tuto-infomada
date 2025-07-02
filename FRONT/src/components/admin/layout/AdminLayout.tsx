@@ -81,15 +81,15 @@ const AdminLayout: React.FC = () => {
   return (
     <div className="flex h-screen bg-gray-100">
       <Sidebar isOpen={isSidebarOpen} onClose={toggleSidebar} />
-      <div className="w-full h-full p-3 bg-primary-admin-sidebar-bg">
+      <div className="w-full h-full p-2 bg-primary-admin-sidebar-bg">
       <div className="flex-1 flex flex-col overflow-hidden h-full rounded-xl">
         <AdminHeader
           onLogout={handleLogout}
           onToggleSidebar={toggleSidebar}
           onOpenProfModal={handleOpenProfModal}
         />
-        <main className="flex-1 p-6 lg:p-8 overflow-y-auto bg-primary-admin-content-bg">
-          <div className="bg-admin-card-bg p-6 rounded-2xl shadow-main min-h-[calc(100vh-12rem)]">
+        <main className="flex-1 lg:p-3 overflow-y-auto bg-primary-admin-content-bg">
+          <div className="bg-admin-card-bg rounded-2xl shadow-main min-h-[calc(100vh-12rem)]">
             <Outlet />
           </div>
         </main>

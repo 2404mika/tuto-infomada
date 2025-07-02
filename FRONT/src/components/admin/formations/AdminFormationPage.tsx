@@ -5,6 +5,7 @@ import DomainDisplayColumn from "./DomainDisplayColumn";
 import AddDomainModal from "../domaineModal/AddDomaineModal"; 
 import { Domaine, Formation } from "../../types"; 
 import AddFormationModal from "../formationModal/AddFormationModal";
+import EditFormation from "../formationModal/EditFormationModal";
 
 const AdminFormationsPage: React.FC = () => {
     const [isAddDomainModalOpen, setIsAddDomainModalOpen] = useState(false);
@@ -94,8 +95,9 @@ const AdminFormationsPage: React.FC = () => {
         console.log("Nouveau domaine ajouté et liste mise à jour:", newFormation);
     };
     return (
-        <div className=" h-96 flex md:flex-row gap-8 p-2">
-                <div className="w-full">
+        <div className=" ">
+            <div className="h-96 flex md:flex-row gap-8 p-2">
+            <div className="w-full">
                     <FormationDisplayColumn
                     formations={formations}
                     onAddClick={handleOpenAddFormationModal}
@@ -108,6 +110,8 @@ const AdminFormationsPage: React.FC = () => {
                         onAddClick={handleOpenAddDomainModal} 
                     />
                 </div>
+            </div>
+                
                 <AddDomainModal
                 isOpen={isAddDomainModalOpen}
                 onClose={handleCloseAddDomainModal}
@@ -117,6 +121,8 @@ const AdminFormationsPage: React.FC = () => {
                 onClose={handleCloseAddFormationModal}
                 onFormationAdded={handleFormationAdded}
                 />
+                < EditFormation/>
+
         </div>
     );
 };

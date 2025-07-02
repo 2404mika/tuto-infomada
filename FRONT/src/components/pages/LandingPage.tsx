@@ -1,7 +1,7 @@
-import About from "../components/landing/About";
-import FormationCard from "../components/landing/FormationCard";
-import Header from "../components/landing/Header";
-import HeroSection from "../components/landing/HeroSection";
+import About from "../landing/About";
+import FormationCard from "../landing/FormationCard";
+import Header from "../landing/Header";
+import HeroSection from "../landing/HeroSection";
 
 const LandingPage: React.FC = () => {
     return (

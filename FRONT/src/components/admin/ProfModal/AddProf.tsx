@@ -125,7 +125,7 @@ const AddProf: React.FC<AddProfProps> = ({ onProfAdded, fetchProfs }) => {
 
   return (
     <div className=" border p-2 rounded-xl h-[60vh]">
-      <h2 className="text-lg font-semibold mb-4 text-gray-700">Ajouter un nouveau </h2>
+      <h2 className="text-lg font-semibold mb-4 text-gray-700">Ajouter un nouveau Professeur</h2>
       <div className="">
       <form onSubmit={handleSubmit} className="">
         <div className="overflow-y-auto">

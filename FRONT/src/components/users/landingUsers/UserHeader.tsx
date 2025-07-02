@@ -2,7 +2,7 @@
 import React from 'react';
 import { MagnifyingGlassIcon, Bars3Icon } from '@heroicons/react/24/outline';
 import { UserCircleIcon } from '@heroicons/react/24/solid';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
 interface UserHeaderProps {
@@ -10,8 +10,13 @@ interface UserHeaderProps {
 }
 
 const UserHeader: React.FC<UserHeaderProps> = ({ onToggleSidebar }) => {
-  const { user} = useAuth();
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout(); // Efface les tokens et l'utilisateur dans le contexte
+    navigate('/login'); // Redirige vers la page de login
+  };
 
   return (
     <header className="bg-admin-card-bg sticky top-0 z-20 shadow-sm">
@@ -25,9 +30,9 @@ const UserHeader: React.FC<UserHeaderProps> = ({ onToggleSidebar }) => {
               <Bars3Icon className="h-6 w-6" />
             </button>
             <div className="relative hidden md:block w-96">
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
-              </div>
+              </div> */}
             </div>
           </div>
           <div className="flex items-center space-x-4">
@@ -43,7 +48,7 @@ const UserHeader: React.FC<UserHeaderProps> = ({ onToggleSidebar }) => {
               </button>
             </div>
             <button
-              onClick={() => navigate('/landing/')}
+              onClick={handleLogout}
               className="ml-2 text-sm text-red-700 hover:bg-red-200 p-3 bg-red-100 rounded-lg font-medium"
             >
               Déconnexion

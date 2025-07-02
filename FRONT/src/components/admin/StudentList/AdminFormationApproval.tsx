@@ -107,46 +107,52 @@ const AdminFormationApproval: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 max-w-3xl">
-      <h2 className="text-2xl font-bold mb-4">Approbation des Formations</h2>
+      <h2 className="text-2xl font-semibold mb-4 text-gray-800">Approbation des demandes de formations</h2>
       {formations.length === 0 ? (
         <p className="text-gray-500">Aucune formation en attente.</p>
       ) : (
         <div className="space-y-4">
-          {formations.map((formation) => {
-            const statusValue = formation.status.toLowerCase();
-            const isNotPublished = statusValue === 'not published';
+          {[...formations] // Crée une copie pour ne pas modifier l'état original
+            .sort((a, b) => {
+              const isANotPublished = a.status.toLowerCase() === 'not published';
+              const isBNotPublished = b.status.toLowerCase() === 'not published';
+              return isBNotPublished - isANotPublished; // Place "Not Published" en haut
+            })
+            .map((formation) => {
+              const statusValue = formation.status.toLowerCase();
+              const isNotPublished = statusValue === 'not published';
 
-            return (
-              <div
-                key={formation.id}
-                className="bg-white border border-gray-200 rounded-lg p-4 shadow-md"
-              >
-                <p><strong>Nom de l'étudiant :</strong> {formation.student_name}</p>
-                <p><strong>Titre de la formation :</strong> {formation.formation_title}</p>
-                <p><strong>Statut :</strong> <span className={isNotPublished ? 'text-red-500' : 'text-green-500'}>
-                  {isNotPublished ? 'Not Published' : 'Actif'}
-                </span></p>
-                <p><strong>Référence de transaction :</strong> {formation.payment?.ref_transaction || 'N/A'}</p>
-                <p><strong>Montant payé :</strong> {formation.payment?.paid_amount || 'N/A'}</p>
-                {isNotPublished && (
-                  <div className="mt-4 space-x-2">
-                    <button
-                      onClick={() => handleApprove(formation.id)}
-                      className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
-                    >
-                      Approuver
-                    </button>
-                    <button
-                      onClick={() => handleRefuse(formation.id)}
-                      className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
-                    >
-                      Refuser
-                    </button>
-                  </div>
-                )}
-              </div>
-            );
-          })}
+              return (
+                <div
+                  key={formation.id}
+                  className="bg-white border border-gray-200 rounded-3xl p-4 shadow-md font-normal"
+                >
+                  <p className='mb-1'><span className='font-light'>Nom de l'étudiant : </span>{formation.student_name}</p>
+                  <p className='mb-1'><span className='font-light'>Titre de la formation : </span>{formation.formation_title}</p>
+                  <p className='mb-1'><span className='font-light'>Référence de transaction : </span>{formation.payment?.ref_transaction || 'N/A'}</p>
+                  <p className='mb-1'><span className='font-light'>Montant payé : </span>{formation.payment?.paid_amount || 'N/A'}</p>
+                  <p className='mb-1'><span className='font-light'>Statut : </span><span className={isNotPublished ? 'text-red-500' : 'text-green-500'}>
+                    {isNotPublished ? 'Non approuvée' : 'Actif'}
+                  </span></p>
+                  {isNotPublished && (
+                    <div className="mt-4 space-x-2 end-full flex justify-end">
+                      <button
+                        onClick={() => handleApprove(formation.id)}
+                        className="px-4 py-2 bg-green-500 text-white rounded-3xl hover:bg-green-600 font-semibold"
+                      >
+                        Approuver
+                      </button>
+                      <button
+                        onClick={() => handleRefuse(formation.id)}
+                        className="px-4 py-2 bg-red-500 text-white rounded-3xl hover:bg-red-600 font-semibold"
+                      >
+                        Rejeter
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </div>
       )}
 

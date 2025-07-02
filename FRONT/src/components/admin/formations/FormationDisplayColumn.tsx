@@ -23,9 +23,9 @@ const FormationDisplayColumn: React.FC<FormationsListColumnProps> =({
                 {formations.length > 0 ? (
                     <div className="sapce-y-2 opacity-50">
                         {formations.map((formation) =>
-                             <div className="flex items-center p-3 my-1.5 rounded-lg border border-dashed border-gray-300 bg-gray-50">
-                             <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full mr-3 bg-gray-200 text-gray-400 text-sm font-semibold">{formation.id}</div>
-                             <div className="h-4 bg-gray-200 rounded w-3/4 text-slate-900">{formation.title}</div>
+                             <div className="flex items-center p-3 my-1.5 rounded-lg border border-dashed bg-gray-50">
+                             <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center  bg-gray-200 rounded-full mr-3 text-gray-400 text-sm font-semibold">{formation.id}</div>
+                             <div className=" rounded w-3/4 text-slate-900">{formation.title}</div>
                          </div>
                         )}
                        

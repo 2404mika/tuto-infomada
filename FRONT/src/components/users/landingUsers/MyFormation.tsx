@@ -1,7 +1,8 @@
 // src/components/MyFormation.tsx
 import React, { useState, useEffect } from 'react';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { ArrowDown } from 'lucide-react';
 
 interface Payment {
   id: number;
@@ -113,35 +114,40 @@ const MyFormation: React.FC = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
+    <div className="mx-auto p-4 max-w-2xl overflow-hidden">
       <h2 className="text-2xl font-bold mb-4">Mes Formations</h2>
       {formations.length === 0 ? (
         <p className="text-gray-500">Aucune formation soumise pour le moment.</p>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-4 w-full">
           {formations.map((formation) => (
             <div
               key={formation.id}
-              className={`bg-white border border-gray-200 rounded-lg p-4 shadow-md cursor-pointer ${formation.status === 'Published' ? 'hover:bg-gray-100' : ''}`}
+              className={`bg-white border flex justify-between border-gray-200 rounded-lg p-4 shadow-md ${formation.status === 'Published' ? 'hover:bg-gray-100 cursor-pointer' : 'cursor-not-allowed'}`}
               onClick={() => handleFormationClick(formation.formation_id, formation.status)}
             >
-              <h3 className="text-lg font-semibold">Formation: {formation.formation_title}</h3> {/* Conversion en string pour affichage */}
-              <p className="text-gray-700"><strong>Nom de l'étudiant :</strong> {formation.student_name}</p>
-              <p className="text-gray-700"><strong>Utilisateur :</strong> {formation.user_id}</p>
+              <div className=''>
+              <h3 className="text-lg font-semibold text-gray-900 mb-5">{formation.formation_title}</h3> {/* Conversion en string pour affichage */}
+              {/* <p className="text-gray-700"><strong>Nom de l'étudiant :</strong> {formation.student_name}</p> */}
+              {/* <p className="text-gray-700"><strong>Utilisateur :</strong> {formation.user_id}</p> */}
               {formation.created_at && (
                 <p className="text-gray-700"><strong>Date :</strong> {formation.created_at}</p>
               )}
-              <p className="text-gray-700"><strong>Statut :</strong> 
-                {formation.status === 'Not published' ? 'En attente' : 'Actif'}
+              <p className="text-green-700 font-semibold text-sm"><span className={formation.status === 'Not published' ?'text-red-500':'text-green-500'}>{formation.status === 'Not published' ? 'En attente...' : 'Actif'}</span>
+                
               </p>
+              </div>
+              <div className='pt-10'>
               {formation.payment && 'id' in formation.payment && (
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDownloadReceipt(formation.payment.id); }}
-                  className="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                  className="mt-2 h-5 flex justify-center items-center w-5 bg-blue-500 text-white rounded hover:bg-blue-600"
                 >
-                  Télécharger le reçu
+                  <ArrowDown className='h-4'/>
                 </button>
               )}
+              </div>
+              
             </div>
           ))}
         </div>

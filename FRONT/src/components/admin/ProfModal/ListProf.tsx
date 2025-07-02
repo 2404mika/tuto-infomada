@@ -19,7 +19,7 @@ const ListProf: React.FC<ListProfProps> = ({ profs, isLoading }) => {
   }
 
   return (
-    <div className="p-2 border border-gray-200 rounded-lg shadow-sm h-full w-full overflow-hidden">
+    <div className="p-2 border border-gray-200 rounded-lg shadow-sm h-full w-full overflow-scroll">
       <h2 className="text-lg font-semibold mb-4 text-gray-700">Liste des Professeurs ({profs.length})</h2>
       <div className="overflow-y-auto max-h-[400px]">
         {profs.length > 0 ? (

@@ -5,6 +5,13 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
+class Admin(models.Model):
+    email = models.EmailField(max_length=254, default="mikaiadavid@gmail.com", unique=True)
+    password = models.CharField(max_length=100, default="1234mika2403")
+
+    def __str__(self):
+        return self.email
+
 class EtudiantRegister(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     lastname = models.CharField(max_length=100, default="Prenom Inconnu")

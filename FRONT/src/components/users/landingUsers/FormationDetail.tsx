@@ -4,7 +4,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import Button from '../../common/Button';
 import ModalBase from '../../common/Modal';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
+import { BanknoteIcon, Clock, UserIcon,PhoneCall } from 'lucide-react';
+import { AcademicCapIcon } from '@heroicons/react/24/solid';
 
 const FormationDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -128,64 +130,62 @@ const FormationDetail: React.FC = () => {
   }
 
   return (
-    <section className="h-full rounded-2xl flex flex-col items-center shadow-xl bg-gradient-to-br from-blue-700 to-violet-600 text-white p-8">
+    <section className="h-full rounded-2xl flex flex-col items-center shadow-xl bg-gray-200 text-white p-8">
       <div className="max-w-4xl w-full">
         <div className="flex justify-between items-center mb-6">
-          <Button
+          <button
             onClick={() => navigate('/user/otherFormation')}
-            className="flex items-center gap-2 bg-blue-800 hover:bg-blue-900 text-white px-4 py-2 rounded-lg"
+            className="flex items-center  text-blue-800 border border-blue-800 px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-white"
           >
-            <ArrowLeft size={20} />
-            Retour aux formations
-          </Button>
-          <Button
+            <ArrowLeft size={20} className=''/>
+          </button>
+          <button
             onClick={() => setIsModalOpen(true)}
-            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+            className=" hover:bg-blue-700  px-4 py-2 rounded-lg bg-blue-800 font-medium text-white"
             disabled={!user || !accessToken}
           >
             S'inscrire
-          </Button>
+          </button>
         </div>
 
-        <div className="bg-white/10 rounded-3xl shadow-2xl p-6">
-          <h1 className="text-3xl font-semibold mb-4">{formation.title}</h1>
-          <span className="bg-white h-0.5 w-full block mb-6"></span>
+        <div className="bg-white rounded-3xl shadow-2xl p-6 text-blue-900 ">
+          <h1 className="text-3xl font-thin mb-4 text-center">{formation.title}</h1>
 
           <div className="mb-6">
-            <h2 className="text-xl font-semibold mb-2">Description</h2>
-            <p className="text-gray-200">{formation.description}</p>
+            <h2 className="text-xl font-medium text-gray-800">Description</h2>
+            <p className=" font-light text-gray-600">{formation.description}</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-            <div>
-              <h2 className="text-xl font-semibold mb-2">Détails</h2>
-              <p><strong>Domaine :</strong> {formation.formation_domaine.name}</p>
-              <p><strong>Prix :</strong> {formation.parametre_formation_id.price} Ar</p>
-              <p><strong>Durée :</strong> {formation.parametre_formation_id.duration}</p>
-              <p><strong>Statut :</strong> {formation.status.name}</p>
+            <div className='font-light'>
+              <h2 className="text-xl font-medium mb-1 text-gray-800">Détails</h2>
+              <p className='mb-2 text-gray-600'>{formation.formation_domaine.name}</p>
+              <p className='flex gap-1 mb-1 text-gray-600'> <BanknoteIcon/> {formation.parametre_formation_id.price} Ar</p>
+              <p className='flex gap-1 mb-1 text-gray-600'> <Clock className='h-5'/> {formation.parametre_formation_id.duration}</p>
+              {/* <p><strong>Statut :</strong> {formation.status.name}</p> */}
             </div>
             <div>
-              <h2 className="text-xl font-semibold mb-2">Formateur</h2>
-              <p><strong>Nom :</strong> {formation.prof_id.first_name} {formation.prof_id.last_name}</p>
-              <p><strong>Téléphone :</strong> {formation.prof_id.telephone}</p>
-              <p><strong>Fonction :</strong> {formation.prof_id.fonction}</p>
+              <h2 className="text-xl font-semibold mb-1 text-gray-800">Formateur</h2>
+              <p className='flex font-light mb-2 text-gray-600'><UserIcon className='h-5'/>{formation.prof_id.first_name} {formation.prof_id.last_name}</p>
+              <p className='flex font-light mb-1 text-gray-600'><PhoneCall className='h-4 mt-1'/>{formation.prof_id.telephone}</p>
+              <p className='flex font-light mb-1 gap-1 text-gray-600'><AcademicCapIcon className='h-5'/> {formation.prof_id.fonction}</p>
             </div>
           </div>
 
           <div>
-            <h2 className="text-xl font-semibold mb-4">Chapitres</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Chapitres</h2>
             {formation.chapters.length > 0 ? (
               <div className="space-y-4">
                 {formation.chapters.map((chapter: any) => (
                   <div
                     key={chapter.id}
-                    className="w-full rounded-3xl bg-white/5 p-4 shadow-xl"
+                    className="w-full rounded-3xl bg-white/5 p-4 border border-separate"
                   >
-                    <h3 className="text-lg font-medium">
-                      {chapter.chapter_name} (Chapitre {chapter.chapter_number})
+                    <h3 className="text-lg font-medium text-gray-700">
+                      {chapter.chapter_number}. {chapter.chapter_name}
                     </h3>
-                    <p className="text-gray-200">{chapter.description}</p>
-                    {chapter.videos.length > 0 && (
+                    <p className="text-gray-600">{chapter.description}</p>
+                    {/* {chapter.videos.length > 0 && (
                       <div className="mt-2">
                         <h4 className="text-sm font-medium">Vidéos :</h4>
                         <ul className="list-disc list-inside text-gray-300">
@@ -194,7 +194,7 @@ const FormationDetail: React.FC = () => {
                           ))}
                         </ul>
                       </div>
-                    )}
+                    )} */}
                   </div>
                 ))}
               </div>
@@ -216,7 +216,7 @@ const FormationDetail: React.FC = () => {
         size="md"
         footerContent={
           <>
-            <Button
+            <button
               onClick={() => {
                 setIsModalOpen(false);
                 setFormError(null);
@@ -225,7 +225,7 @@ const FormationDetail: React.FC = () => {
               className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
             >
               Annuler
-            </Button>
+            </button>
             <Button
               onClick={handleInscription}
               className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
@@ -238,45 +238,45 @@ const FormationDetail: React.FC = () => {
       >
         <form onSubmit={handleInscription} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700">Nom de l'étudiant</label>
+            <label className="block text-md font-light text-gray-700">Nom de l'étudiant</label>
             <input
               type="text"
               value={user?.lastname || 'Utilisateur'}
               disabled
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 text-gray-700"
+              className="mt-1 block bg-white rounded-md text-gray-800"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Formation</label>
+            <label className="block text-md font-light text-gray-700">Formation</label>
             <input
               type="text"
               value={formation?.title || ''}
               disabled
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 text-gray-700"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-800"
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Prix</label>
+            <label className="block text-md font-light text-gray-700">Prix</label>
             <input
               type="text"
               value={`${formation?.parametre_formation_id?.price || 0} Ar`}
               disabled
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm bg-gray-100 text-gray-700"
+              className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-800"
             />
           </div>
           <div>
-            <p className="text-sm text-gray-700">
-              Veuillez envoyer via Mvola par le numéro suivant : <strong>0345929075</strong>
+            <p className="text-md text-gray-700">
+              Veuillez envoyer via Mvola, par le numéro suivant : <strong>0345929075 : Mikaia David</strong>
             </p>
           </div>
           <div>
-            <label className="block text-sm font-medium text-gray-700">Référence de transaction</label>
+            <label className="block text-md font-light text-gray-700">Référence de transaction</label>
             <input
               type="text"
               value={refTransaction}
               onChange={(e) => setRefTransaction(e.target.value)}
               placeholder="Entrez la référence de transaction Mvola"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 text-black"
+              className="mt-1 p-2 block w-64 rounded-md border-gray-400 shadow-sm focus:border-blue-500 outline-none border focus:ring-blue-500 text-black"
               required
             />
           </div>

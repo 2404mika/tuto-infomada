@@ -2,17 +2,70 @@ from rest_framework import serializers
 from .models import (
     EtudiantRegister, ProfRegister,Parametre_formation, Domaine, Formation, Chapter,
     Formation_by_user, Payment, Discussion, Role, RolesUserMapping, Token_souscription,
-    Exam, Question, Exam_response_selection, Exam_by_user, Exam_response_by_user, Status,Video,
+    Exam, Question, Exam_response_selection, Exam_by_user, Exam_response_by_user, Status,Video,Admin
 )
 from django.contrib.auth.models import User
 from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.tokens import default_token_generator
+from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
+
+class AdminLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField()
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+        if not Admin.objects.filter(email=email, password=password).exists():
+            raise serializers.ValidationError("Email ou mot de passe incorrect")
+        return data
+    
+class ProfLoginSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, data):
+        email = data.get('email')
+        password = data.get('password')
+
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError({"detail": "Email ou mot de passe incorrect"})
+
+        if not user.check_password(password):
+            raise serializers.ValidationError({"detail": "Email ou mot de passe incorrect"})
+
+        # Vérifier que l'utilisateur est un professeur
+        if not ProfRegister.objects.filter(user=user).exists():
+            raise serializers.ValidationError({"detail": "Utilisateur non enregistré en tant que professeur"})
+
+        # Générer les tokens JWT
+        refresh = RefreshToken.for_user(user)
+        prof = ProfRegister.objects.get(user=user)
+
+        return {
+            "id": user.id,
+            "email": user.email,
+            "first_name": prof.first_name,
+            "last_name": prof.last_name,
+            "fonction": prof.fonction,
+            "access_token": str(refresh.access_token),
+            "refresh_token": str(refresh),
+        }
+
+class ProfProfileSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email')
+    username = serializers.CharField(source='user.username')
+    class Meta:
+        model = ProfRegister
+        fields = ['id', 'first_name', 'last_name', 'email', 'username', 'telephone', 'fonction']
 
 class EtudiantRegisterSerializer(serializers.ModelSerializer):
     lastname = serializers.CharField(write_only=True)
@@ -179,40 +232,34 @@ class FormationSimpleSerializer(serializers.ModelSerializer):
 #         return chapter
 
 class ChapterSerializer(serializers.ModelSerializer):
-    # Pour la LECTURE, on veut voir les vidéos détaillées
     videos = VideoSerializer(many=True, required=False,read_only=True)
-    # Pour la LECTURE, on veut voir la formation détaillée
     formation = FormationSimpleSerializer(read_only=True, source='formation_id')
 
     class Meta:
         model = Chapter
         fields = [
             'id', 'chapter_name', 'description', 
-            'chapter_number', 'videos', 'formation' # 'formation' pour la lecture
+            'chapter_number', 'videos', 'formation'
         ]
-        # Pour l'ÉCRITURE, formation_id n'est pas requis ici car il est
-        # fourni par le FormationSerializer parent.
         extra_kwargs = {
             'formation_id': {'write_only': True, 'required': False}
         }
     
 class FormationSerializer(serializers.ModelSerializer):
-    # Champs pour la LECTURE (GET)
+    # Champs fanaovana (GET)
     parametre_formation_id = Parametre_formationSerializer()
     chapters = ChapterSerializer(many=True, required=False, read_only=True)
     formation_domaine = DomaineReadSerializer(read_only=True)
     prof_id = ProfReadSerializer(read_only=True)
     status = StatusSerializer(read_only=True)
     
-    # Champs pour l'ÉCRITURE (POST)
-    # On utilise 'source' pour lier le champ d'écriture au bon champ du modèle.
+    # Champs fanaovana (POST)
     formation_domaine_write = serializers.PrimaryKeyRelatedField(
         queryset=Domaine.objects.all(), source='formation_domaine', write_only=True
     )
     prof_id_write = serializers.PrimaryKeyRelatedField(
         queryset=ProfRegister.objects.all(), source='prof_id', write_only=True
     )
-    # Pour la création, on recevra les données des chapitres
     chapters_write = ChapterSerializer(many=True, required=False, write_only=True, source='chapters')
 
 
@@ -221,32 +268,27 @@ class FormationSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'title', 'description', 
             'parametre_formation_id', 
-            'formation_domaine', # Lecture
-            'formation_domaine_write', # Ecriture
-            'prof_id', # Lecture
-            'prof_id_write', # Ecriture
+            'formation_domaine',
+            'formation_domaine_write',
+            'prof_id',
+            'prof_id_write',
             'status', 
-            'chapters', # Lecture
-            'chapters_write', # Ecriture
+            'chapters',
+            'chapters_write',
         ]
     
     def create(self, validated_data):
-        # La méthode create de DRF gère déjà les relations 'source'.
-        # On a juste besoin d'extraire les données imbriquées.
         parametre_data = validated_data.pop('parametre_formation_id')
-        chapters_data = validated_data.pop('chapters') # Le source='chapters' a renommé chapters_write
+        chapters_data = validated_data.pop('chapters') 
         
-        # Créer les objets liés
         parametre = Parametre_formation.objects.create(**parametre_data)
         
-        # Créer la formation principale
         formation = Formation.objects.create(
             parametre_formation_id=parametre,
-            status=Status.objects.get(value=1), # Ou 0 si c'est le statut par défaut
+            status=Status.objects.get(value=0),
             **validated_data
         )
 
-        # Créer les chapitres liés à cette nouvelle formation
         for chapter_data in chapters_data:
             videos_data = chapter_data.pop('videos', [])
             chapter = Chapter.objects.create(formation_id=formation, **chapter_data)
@@ -256,6 +298,29 @@ class FormationSerializer(serializers.ModelSerializer):
                 chapter.videos.add(video)
                 
         return formation    
+    
+    def update(self, instance, validated_data):
+        instance.title = validated_data.get('title', instance.title)
+        instance.description = validated_data.get('description', instance.description)
+        instance.formation_domaine = validated_data.get('formation_domaine', instance.formation_domaine)
+        instance.prof_id = validated_data.get('prof_id', instance.prof_id)
+
+        parametre_data = validated_data.get('parametre_formation_id', {})
+        instance.parametre_formation_id.price = parametre_data.get('price', instance.parametre_formation_id.price)
+        instance.parametre_formation_id.duration = parametre_data.get('duration', instance.parametre_formation_id.duration)
+        instance.parametre_formation_id.save()
+
+        chapters_data = validated_data.get('chapters', [])
+        instance.chapters.all().delete()
+        for chapter_data in chapters_data:
+            videos_data = chapter_data.pop('videos', [])
+            chapter = Chapter.objects.create(formation_id=instance, **chapter_data)
+            for video_data in videos_data:
+                video = Video.objects.create(**video_data)
+                chapter.videos.add(video)
+
+        instance.save()
+        return instance
 
 # class FormationSerializer(serializers.ModelSerializer):
 #     parametre_formation_id = Parametre_formationSerializer()
@@ -411,9 +476,9 @@ class FormationByUserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         student_name = validated_data.pop('student_name', None)
-        status = validated_data.pop('status', None)  # Par défaut NULL
+        status = validated_data.pop('status', None) 
         if status is None:
-            status = Status.objects.get(value=0)  # Fallback à Not Published si non spécifié
+            status = Status.objects.get(value=0)
         formation_by_user = Formation_by_user.objects.create(
             user_id=validated_data['user_id'],
             formation_id=validated_data['formation_id'],
@@ -422,7 +487,6 @@ class FormationByUserCreateSerializer(serializers.ModelSerializer):
         )
         return formation_by_user
 
-# Serializer pour la lecture des inscriptions (GET)
 class FormationByUserReadSerializer(serializers.ModelSerializer):
     user_id = serializers.StringRelatedField()  # Retourne username
     formation_id = serializers.PrimaryKeyRelatedField(read_only=True)  # Retourne l'id sans queryset
