@@ -28,11 +28,11 @@ const LoginAdmin: React.FC = () => {
         throw new Error(errorData.detail || 'Email ou mot de passe incorrect');
       }
 
+      navigate('/admin/Dashboard/');
       const data = await response.json();
       console.log("data admin diaaaaaaaaa", data)
-      // Stocker l'email dans localStorage pour indiquer une connexion admin
       localStorage.setItem('adminEmail', data.email);
-      navigate('/admin/');
+      // alert("Metyiiiii")
     } catch (err: any) {
       setError(err.message || 'Erreur lors de la connexion');
     }

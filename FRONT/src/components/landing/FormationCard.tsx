@@ -66,8 +66,8 @@ const FormationCard: React.FC = () => {
   // };
 
   return (
-    <section className="min-h-[85vh] mt-16 rounded-2xl flex flex-col items-center shadow-xl bg-slate-200 border border-blue-100 text-white p-8">
-      <h1 className="font-semibold text-3xl text-blue-800">Nos formations disponibles</h1>
+    <section className="min-h-[85vh] mt-16 rounded-2xl flex flex-col items-center shadow-xl bg-slate-100 border border-blue-700 border-dashed text-white p-8">
+      <h1 className="font-semibol d text-2xl text-blue-950 bg-blue-500/10 pl-6 pr-6 pb-3 pt-3 rounded-full border border-dashed">Nos formations disponibles</h1>
       {/* <span className="bg-black h-0.5 w-96"></span> */}
 
       <div className="relative w-full">

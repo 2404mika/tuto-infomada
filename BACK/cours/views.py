@@ -20,10 +20,17 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework_simplejwt.views import TokenRefreshView
 from rest_framework.generics import ListAPIView
 from reportlab.pdfgen import canvas
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import A4
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import cm
+from reportlab.pdfbase import pdfmetrics
+from reportlab.pdfbase.ttfonts import TTFont
 
 
 class AdminLoginAPIView(APIView):
-    # permission_classes = [AllowAny]
+    permission_classes = [AllowAny]
 
     def post(self, request):
         serializer = AdminLoginSerializer(data=request.data)
@@ -524,21 +531,110 @@ class PaymentReceiptView(APIView):
         except Payment.DoesNotExist:
             return Response({"error": "Paiement non trouvé"}, status=status.HTTP_404_NOT_FOUND)
 
+        # Configurer la réponse HTTP pour le PDF
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="Recu-du-paiement_{payment_id}.pdf"'
-        
-        p = canvas.Canvas(response)
-        p.drawString(100, 750, f"Reçu de Paiement")
-        p.drawString(100, 730, f"Numéro de Paiement: {payment.id}")
-        p.drawString(100, 630, f"Étudiant: {payment.formation_by_user_id.student_name or payment.formation_by_user_id.user_id.username}")
-        p.drawString(100, 650, f"Formation: {payment.formation_by_user_id.formation_id.title}")
-        p.drawString(100, 710, f"Montant: {payment.paid_amount} Ar")
-        p.drawString(100, 690, f"Référence Transaction: {payment.ref_transaction}")
-        p.drawString(100, 670, f"Date: {payment.payement_date}")
-        p.showPage()
-        p.save()
 
+        # Créer le document PDF
+        doc = SimpleDocTemplate(response, pagesize=A4, rightMargin=2*cm, leftMargin=2*cm, topMargin=2*cm, bottomMargin=2*cm)
+        elements = []
+
+        # Styles pour le texte
+        styles = getSampleStyleSheet()
+        title_style = ParagraphStyle(
+            'TitleStyle',
+            parent=styles['Heading1'],
+            fontName='Helvetica-Bold',  # Utiliser Helvetica
+            fontSize=16,
+            spaceAfter=12,
+            alignment=1,  # Centré
+        )
+        header_style = ParagraphStyle(
+            'HeaderStyle',
+            parent=styles['Normal'],
+            fontName='Helvetica-Bold',  # Utiliser Helvetica
+            fontSize=20,
+            textColor=colors.HexColor('#003366'),
+            spaceAfter=12,
+            alignment=1,  # Centré
+        )
+        footer_style = ParagraphStyle(
+            'FooterStyle',
+            parent=styles['Normal'],
+            fontName='Helvetica',  # Utiliser Helvetica
+            fontSize=10,
+            textColor=colors.grey,
+            spaceBefore=12,
+            alignment=1,  # Centré
+        )
+
+        # En-tête
+        elements.append(Paragraph("INFOMADA", header_style))
+        elements.append(Spacer(1, 0.5*cm))
+
+        # Titre
+        elements.append(Paragraph("Reçu de Votre Paiement", title_style))
+        elements.append(Spacer(1, 0.5*cm))
+
+        # Données pour le tableau
+        data = [
+            ["Numéro de Paiement", str(payment.id)],
+            ["Étudiant", payment.formation_by_user_id.student_name or payment.formation_by_user_id.user_id.username],
+            ["Formation", payment.formation_by_user_id.formation_id.title],
+            ["Montant", f"{payment.paid_amount} Ar"],
+            ["Référence Transaction", payment.ref_transaction],
+            ["Date", str(payment.payement_date)],
+        ]
+
+        # Créer le tableau
+        table = Table(data, colWidths=[6*cm, 10*cm])
+        table.setStyle(TableStyle([
+            ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#003366')),
+            ('TEXTCOLOR', (0, 0), (-1, 0), colors.white),
+            ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+            ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),  # Utiliser Helvetica
+            ('FONTSIZE', (0, 0), (-1, -1), 10),
+            ('TOPPADDING', (0, 0), (-1, -1), 6),
+            ('BOTTOMPADDING', (0, 0), (-1, -1), 6),
+            ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+        ]))
+
+        elements.append(table)
+
+        
+        elements.append(Spacer(1, 1*cm))
+        elements.append(Paragraph('Merci pour votre confiance.', footer_style))
+        elements.append(Paragraph('"Ny fahombiazanao no tanjonay"', footer_style))
+
+        # Générer le PDF
+        doc.build(elements)
         return response
+
+# class PaymentReceiptView(APIView):
+#     permission_classes = [IsAuthenticated]
+
+#     def get(self, request, payment_id):
+#         try:
+#             payment = Payment.objects.get(id=payment_id, formation_by_user_id__user_id=request.user)
+#         except Payment.DoesNotExist:
+#             return Response({"error": "Paiement non trouvé"}, status=status.HTTP_404_NOT_FOUND)
+
+#         response = HttpResponse(content_type='application/pdf')
+#         response['Content-Disposition'] = f'attachment; filename="Recu-du-paiement_{payment_id}.pdf"'
+        
+#         p = canvas.Canvas(response)
+#         p.drawString(100, 750, f"Reçu de Paiement")
+#         p.drawString(100, 730, f"Numéro de Paiement: {payment.id}")
+#         p.drawString(100, 630, f"Étudiant: {payment.formation_by_user_id.student_name or payment.formation_by_user_id.user_id.username}")
+#         p.drawString(100, 650, f"Formation: {payment.formation_by_user_id.formation_id.title}")
+#         p.drawString(100, 710, f"Montant: {payment.paid_amount} Ar")
+#         p.drawString(100, 690, f"Référence Transaction: {payment.ref_transaction}")
+#         p.drawString(100, 670, f"Date: {payment.payement_date}")
+#         p.showPage()
+#         p.save()
+
+#         return response
+
 
 
 

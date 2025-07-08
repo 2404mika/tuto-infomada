@@ -21,11 +21,11 @@ const FormationDisplayColumn: React.FC<FormationsListColumnProps> =({
             <h2 className="text-xl font-semibold text-gray-800 mb-4">Liste des formations</h2>
             <div className="flex-grow bg-white p-3 rounded-lg border border-dashed overflow-scroll h-52">
                 {formations.length > 0 ? (
-                    <div className="sapce-y-2 opacity-50">
+                    <div className="sapce-y-2 opacity-80">
                         {formations.map((formation) =>
                              <div className="flex items-center p-3 my-1.5 rounded-lg border border-dashed bg-gray-50">
                              <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center  bg-gray-200 rounded-full mr-3 text-gray-400 text-sm font-semibold">{formation.id}</div>
-                             <div className=" rounded w-3/4 text-slate-900">{formation.title}</div>
+                             <div className=" rounded w-3/4 text-slate-900 font-medium">{formation.title}</div>
                          </div>
                         )}
                        

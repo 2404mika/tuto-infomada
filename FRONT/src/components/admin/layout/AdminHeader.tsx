@@ -16,9 +16,9 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onLogout, onToggleSidebar,onO
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    localStorage.removeItem('adminEmail'); // Supprime les données de session
-    onLogout(); // Appelle la fonction onLogout passée en prop
-    navigate('/'); // Redirige vers la page de connexion
+    localStorage.removeItem('adminEmail');
+    onLogout(); 
+    navigate('/LoginAdmin/'); 
   };
   return (
     <header className="bg-slate-100 sticky top-0 z-20 shadow-sm">
@@ -66,7 +66,8 @@ const AdminHeader: React.FC<AdminHeaderProps> = ({ onLogout, onToggleSidebar,onO
               </button>
               {/* Dropdown menu ici si besoin */}
             </div>
-             <button onClick={handleLogout} className="ml-2 text-sm text-red-700 hover:bg-red-200 p-3 bg-red-100 rounded-lg font-medium">Déconnexion</button>
+             <button onClick={handleLogout} className="ml-2 text-sm text-red-700 hover:bg-red-200 p-3 bg-red-100 rounded-lg font-medium">
+              Déconnexion</button>
           </div>
         </div>
       </div>

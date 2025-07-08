@@ -19,6 +19,8 @@ import About from './components/landing/About';
 import EditFormation from './components/admin/formationModal/EditFormationModal';
 import AdminDashboard from './components/admin/dashboard/DashboardAdmin';
 import LoginAdmin from './components/auth/LoginAdmin';
+import ProfLogin from './components/auth/LoginProf';
+import ProfStudents from './components/Prof/ProfStudents';
 
 function App() {
   return (
@@ -27,6 +29,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/LoginAdmin" element={<LoginAdmin />} />
+          <Route path="/LoginProf" element={<ProfLogin />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/landing" element={<LandingPage />} />
           <Route path="/domaine/:id" element={<DomaineDetail />} />
@@ -34,17 +37,16 @@ function App() {
           <Route path="/About" element={<About />} />
           
 
-          <Route element={<ProtectedRoute />}>
+          {/* <Route element={<ProtectedRoute />}> */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route path="Acceuil" element={<AdminLayout />} />
             <Route path="Dashboard" element={<AdminDashboard />} />
             <Route path="Formations" element={<AdminFormationsPage />} />
-            {/* <Route path="Parametres" element={<EditFormationModal isOpen={true} onClose={() => {}} />} /> */}
             <Route path="Parametres" element={<EditFormation />} />
             <Route path="Etudiants" element={<AdminFormationApproval />} />
           </Route>
-          </Route>
-          <Route path="/" element={<Navigate to="/LoginAdmin" />} />
+          {/* </Route> */}
+          <Route path="/loginAdmin" element={<Navigate to="/LoginAdmin" />} />
           
 
           <Route element={<ProtectedRoute />}>
@@ -55,8 +57,12 @@ function App() {
               <Route path="myformationDetail/:id" element={<MyFormationDetail />} />
             </Route>
           </Route>
+          <Route path="/login" element={<Navigate to="/login" />} />
 
-          <Route path="/" element={<Navigate to="/login" />} />
+          <Route>
+            <Route path="/prof" element={<ProfStudents/>}/>
+          </Route>
+
         </Routes>
       </BrowserRouter>
     </AuthProvider>

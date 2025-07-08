@@ -43,15 +43,16 @@ class ProfLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError({"detail": "Email ou mot de passe incorrect"})
 
         # Vérifier que l'utilisateur est un professeur
-        if not ProfRegister.objects.filter(user=user).exists():
+        try:
+            prof = ProfRegister.objects.get(user=user)
+        except ProfRegister.DoesNotExist:
             raise serializers.ValidationError({"detail": "Utilisateur non enregistré en tant que professeur"})
 
         # Générer les tokens JWT
         refresh = RefreshToken.for_user(user)
-        prof = ProfRegister.objects.get(user=user)
 
         return {
-            "id": user.id,
+            "id": prof.id,  # Retourner l'ID de ProfRegister
             "email": user.email,
             "first_name": prof.first_name,
             "last_name": prof.last_name,
@@ -252,6 +253,8 @@ class FormationSerializer(serializers.ModelSerializer):
     formation_domaine = DomaineReadSerializer(read_only=True)
     prof_id = ProfReadSerializer(read_only=True)
     status = StatusSerializer(read_only=True)
+
+    inscrits = serializers.SerializerMethodField()
     
     # Champs fanaovana (POST)
     formation_domaine_write = serializers.PrimaryKeyRelatedField(
@@ -275,7 +278,11 @@ class FormationSerializer(serializers.ModelSerializer):
             'status', 
             'chapters',
             'chapters_write',
+            'inscrits',
         ]
+    def get_inscrits(self, obj):
+        # Compter les inscriptions approuvées (status.value == 1)
+        return Formation_by_user.objects.filter(formation_id=obj.id, status__value=1).count()   
     
     def create(self, validated_data):
         parametre_data = validated_data.pop('parametre_formation_id')

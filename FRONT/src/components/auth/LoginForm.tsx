@@ -111,10 +111,10 @@ const LoginForm: React.FC = () => {
     <div className="bg-white rounded-xl shadow-md p-8">
       <form onSubmit={handleSubmit}>
         <FormInput
-          label="Email / Téléphone"
+          label="Email"
           type="text"
           name="emailOrPhone"
-          placeholder="votre@gmail.com ou 0345929075"
+          placeholder="votre@gmail.com"
           value={formData.emailOrPhone}
           onChange={handleChange}
           error={errors.emailOrPhone}
@@ -133,7 +133,7 @@ const LoginForm: React.FC = () => {
         {errors.general && (
           <p className="text-red-500 text-sm mb-4">{errors.general}</p>
         )}
-        <div className="flex items-center justify-between mb-6">
+        {/* <div className="flex items-center justify-between mb-6">
           <label className="flex items-center">
             <input
               type="checkbox"
@@ -144,7 +144,7 @@ const LoginForm: React.FC = () => {
             />
             <span className="ml-2 text-sm text-gray-600">Se souvenir de moi</span>
           </label>
-        </div>
+        </div> */}
         <Button type="submit" isLoading={isLoading} fullWidth>
           Se connecter
         </Button>

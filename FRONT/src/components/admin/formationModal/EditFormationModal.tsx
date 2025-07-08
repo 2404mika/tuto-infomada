@@ -1,4 +1,3 @@
-// src/components/EditFormation.tsx
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ModalBase from '../../common/Modal';
@@ -6,6 +5,7 @@ import Button from '../../common/Button';
 import FormInput from '../../common/FormInput';
 import { FaEdit, FaCheckCircle } from 'react-icons/fa';
 import { PlusIcon, TrashIcon } from '@heroicons/react/24/solid';
+
 interface Formation {
   id: number;
   title: string;
@@ -14,6 +14,8 @@ interface Formation {
   prof_id: { id: number; first_name: string; last_name: string };
   parametre_formation_id: { price: number; duration: string };
   chapters: { id: number; chapter_name: string; description: string; chapter_number: number; videos: { id: number; file: string; name: string }[] }[];
+  status: { value: number; name: string };
+  inscrits: number; // Nouveau champ pour le nombre d'inscrits
 }
 
 const EditFormation: React.FC = () => {
@@ -37,6 +39,7 @@ const EditFormation: React.FC = () => {
         });
         if (!response.ok) throw new Error('Erreur lors de la récupération des formations');
         const data = await response.json();
+        console.log('Formations reçues:', data); // Log pour débogage
         setFormations(data);
       } catch (err) {
         setError((err as Error).message);
@@ -100,7 +103,7 @@ const EditFormation: React.FC = () => {
       });
       if (!response.ok) throw new Error('Erreur lors de la mise à jour');
       const data = await response.json();
-      console.log("lasaaaaa:", data)
+      console.log('Formation mise à jour:', data);
       setFormations(formations.map((f) => (f.id === data.id ? data : f)));
       setSelectedFormation(null);
     } catch (err) {
@@ -122,15 +125,18 @@ const EditFormation: React.FC = () => {
             <p className="text-gray-500 text-xs mt-2">Domaine: {formation.formation_domaine.name}</p>
             <p className="text-gray-500 text-xs">Professeur: {formation.prof_id.first_name} {formation.prof_id.last_name}</p>
             {formation.status?.value === 1 ? (
-              <p className="mt-4 text-green-500 font-medium">Publiée</p>
+              <div className="mt-4 flex justify-between items-center">
+                <p className="text-green-500 font-medium">Publiée</p>
+                <p className="text-gray-500 text-xs text-center">Inscrits: {formation.inscrits}</p>
+              </div>
             ) : (
-              <div className="mt-10 flex  justify-around">
+              <div className="mt-10 flex justify-around">
                 <button
                   onClick={() => {
                     console.log('Opening modal for formation:', formation.id);
                     setSelectedFormation(formation);
                   }}
-                  className=" hover:bg-blue-200 text-blue-800 border px-3 py-1 rounded-xl flex items-center"
+                  className="hover:bg-blue-200 text-blue-800 border px-3 py-1 rounded-xl flex items-center"
                 >
                   <FaEdit className="w-3 h-4 mr-1" /> Modifier
                 </button>
@@ -343,11 +349,10 @@ const EditFormation: React.FC = () => {
                 <Button
                   type="button"
                   onClick={() => setSelectedFormation(null)}
-                  className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
                 >
                   Annuler
                 </Button>
-                <Button type="submit" isLoading={false} className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
+                <Button type="submit" isLoading={false}>
                   Valider
                 </Button>
               </div>

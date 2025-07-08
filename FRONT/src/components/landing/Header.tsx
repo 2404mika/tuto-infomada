@@ -26,7 +26,7 @@ const NavLink: React.FC<{ href: string; children: React.ReactNode; isExternal?: 
 
 const Header: React.FC = () => {
   return (
-    <header className=' rounded-xl shadow-2xl backdrop-blur-lg bg-white/80 z-50 relative'>
+    <header className=' rounded-xl shadow-2xl backdrop-blur-lg bg-white/80 z-150 relative'>
       <div className="container mx-auto sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
@@ -38,7 +38,8 @@ const Header: React.FC = () => {
           <nav className="hidden md:flex space-x-4">
             <NavLink href="#formations-disponibles">Accueil</NavLink>
             <NavLink href="#avantages">Formations</NavLink>
-            <NavLink href="#about">A propos</NavLink>
+            <NavLink href="#contact">A propos</NavLink>
+            <NavLink href="#about">Contact</NavLink>
             <Link
               href="/register"
               className="bg-blue-900 text-white hover:bg-blue-700 transition-colors duration-300 px-4 py-2 rounded-md text-sm font-medium shadow-sm"

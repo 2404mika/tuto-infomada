@@ -48,37 +48,37 @@ const RegisterForm: React.FC = () => {
     const newErrors = { ...errors };
     
     if (!formData.name.trim()) {
-      newErrors.name = 'Full name is required';
+      newErrors.name = 'Prénom requis';
       isValid = false;
     }
     if(!formData.full_name.trim()){
-      newErrors.full_name = "Nom complet Requis";
+      newErrors.full_name = "Nom complet requis";
       isValid=false;
     }
     
     if (!formData.email) {
-      newErrors.email = 'Email is required';
+      newErrors.email = 'Email requis';
       isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Email non valide';
       isValid = false;
     }
     if(!formData.telephone){
-      newErrors.telephone = "Numero telephone recquis"
+      newErrors.telephone = "Numero téléphone recquis"
       isValid = false;
     }else if (formData.telephone.length < 10 && formData.telephone.length > 10){
-      newErrors.telephone = "Numero Invalide";
+      newErrors.telephone = "Numéro Invalide";
     }
     if (!formData.password) {
-      newErrors.password = 'Password is required';
+      newErrors.password = 'Mot de passe requis';
       isValid = false;
     } else if (formData.password.length < 8) {
-      newErrors.password = 'Password must be at least 8 characters';
+      newErrors.password = 'Le mot de passe doit avoir au moins 8 caractères';
       isValid = false;
     }
     
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = 'Veuillez confirmer votre mot de passe';
       isValid = false;
     } else if (formData.password !== formData.confirmPassword) {
       newErrors.confirmPassword = 'Passwords do not match';
@@ -86,7 +86,7 @@ const RegisterForm: React.FC = () => {
     }
     
     if (!formData.agreeTerms) {
-      newErrors.agreeTerms = 'You must agree to the terms and conditions';
+      newErrors.agreeTerms = "Vous devez accépter les Conditions d'utilisation et la Politique de confidentialité";
       isValid = false;
     }
     
