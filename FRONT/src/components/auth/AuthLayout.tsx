@@ -1,6 +1,7 @@
 import React, { ReactNode } from 'react';
 import { Laptop } from 'lucide-react';
 import { Link } from '../common/Link';
+import { useNavigate } from 'react-router-dom';
 interface AuthLayoutProps {
   children: ReactNode;
   title: string;
@@ -8,13 +9,14 @@ interface AuthLayoutProps {
 }
 
 const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) => {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex flex-col md:flex-row">
       
       <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-600 to-violet-600 text-white p-12 flex-col justify-between">
         <div className="flex items-center gap-2 mb-12">
           
-          <Link  href="/landing" className="text-2xl font-bold flex"> <Laptop size={32} /> INFOMADA</Link>
+          <a  onClick={()=> navigate("/landing")} className="text-2xl font-bold flex cursor-pointer"> <Laptop size={32} /> INFOMADA</a>
         </div>
         
         <div className="mb-auto">

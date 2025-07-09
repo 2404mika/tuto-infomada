@@ -2,24 +2,24 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import Button from '../../common/Button';
-import ModalBase from '../../common/Modal';
-import { useAuth } from '../../context/AuthContext';
+// import Button from '../common/Button';
+// import ModalBase from '../../common/Modal';
+import { useAuth } from '../context/AuthContext';
 import { BanknoteIcon, Clock, UserIcon,PhoneCall } from 'lucide-react';
 import { AcademicCapIcon } from '@heroicons/react/24/solid';
-import { toast } from 'react-toastify';
+// import { toast } from 'react-toastify';
 
-const FormationDetail: React.FC = () => {
+const FormationDetailLanding: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user, loading, accessToken } = useAuth();
   const [formation, setFormation] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [refTransaction, setRefTransaction] = useState('');
-  const [formError, setFormError] = useState<string | null>(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [refTransaction, setRefTransaction] = useState('');
+//   const [formError, setFormError] = useState<string | null>(null);
+//   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     const fetchFormationDetail = async () => {
@@ -53,65 +53,65 @@ const FormationDetail: React.FC = () => {
     }
   }, [id, loading]);
 
-  const handleInscription = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!refTransaction.trim()) {
-      setFormError('Veuillez entrer la référence de transaction');
-      return;
-    }
+//   const handleInscription = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     if (!refTransaction.trim()) {
+//       setFormError('Veuillez entrer la référence de transaction');
+//       return;
+//     }
 
-    console.log('Auth State:', { user, loading, accessToken });
+//     console.log('Auth State:', { user, loading, accessToken });
 
-    if (!user || loading || !accessToken) {
-      setFormError('Utilisateur non connecté ou token invalide. Veuillez vous reconnecter.');
-      return;
-    }
+//     if (!user || loading || !accessToken) {
+//       setFormError('Utilisateur non connecté ou token invalide. Veuillez vous reconnecter.');
+//       return;
+//     }
 
-    setIsSubmitting(true);
-    setFormError(null);
-    const afficherToast = () => {
-      toast.success("Opération réussie !");
-      toast.error("Une erreur est survenue !");
-      toast.info("Voici une information.");
-      toast.warn("Attention !");
-    };
+//     setIsSubmitting(true);
+//     setFormError(null);
+//     const afficherToast = () => {
+//       toast.success("Opération réussie !");
+//       toast.error("Une erreur est survenue !");
+//       toast.info("Voici une information.");
+//       toast.warn("Attention !");
+//     };
 
-    try {
-      const dataToSend = {
-        user_id: user.id,
-        lastname: user.lastname,
-        formation_id: formation.id,
-        price: formation.parametre_formation_id.price,
-        ref_transaction: refTransaction,
-      };
-      console.log("data sennnnddd:", dataToSend)
-      const response = await fetch('http://localhost:8000/api/formationByUser/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify(dataToSend),
-      });
+//     try {
+//       const dataToSend = {
+//         user_id: user.id,
+//         lastname: user.lastname,
+//         formation_id: formation.id,
+//         price: formation.parametre_formation_id.price,
+//         ref_transaction: refTransaction,
+//       };
+//       console.log("data sennnnddd:", dataToSend)
+//       const response = await fetch('http://localhost:8000/api/formationByUser/', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//           Authorization: `Bearer ${accessToken}`,
+//         },
+//         body: JSON.stringify(dataToSend),
+//       });
 
-      const result = await response.json();
-      console.log('Inscription response:', result);
+//       const result = await response.json();
+//       console.log('Inscription response:', result);
 
-      if (!response.ok) {
-        throw new Error(result.message || 'Erreur lors de la création de l\'inscription');
-      }
+//       if (!response.ok) {
+//         throw new Error(result.message || 'Erreur lors de la création de l\'inscription');
+//       }
 
-      setIsModalOpen(false);
-      setRefTransaction('');
-      // alert('Inscription et paiement enregistrés avec succès !');
-      toast.success("Inscription et paiement enregistrés avec succès !")
-    } catch (err) {
-      setFormError('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
-      console.error(err);
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+//       setIsModalOpen(false);
+//       setRefTransaction('');
+//       // alert('Inscription et paiement enregistrés avec succès !');
+//       toast.success("Inscription et paiement enregistrés avec succès !")
+//     } catch (err) {
+//       setFormError('Une erreur est survenue lors de l\'inscription. Veuillez réessayer.');
+//       console.error(err);
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
 
   if (isLoading || loading) {
     return (
@@ -142,15 +142,15 @@ const FormationDetail: React.FC = () => {
       <div className="max-w-4xl w-full">
         <div className="flex justify-between items-center mb-6">
           <button
-            onClick={() => navigate('/user/otherFormation')}
+            onClick={() => navigate(-1)}
             className="flex items-center  text-blue-800 border border-blue-800 px-4 py-2 rounded-lg hover:bg-blue-800 hover:text-white"
           >
             <ArrowLeft size={20} className=''/>
           </button>
           <button
-            onClick={() => setIsModalOpen(true)}
+            onClick={() => navigate("/login")}
             className=" hover:bg-blue-700  px-4 py-2 rounded-lg bg-blue-800 font-medium text-white"
-            disabled={!user || !accessToken}
+            // disabled={!user || !accessToken}
           >
             S'inscrire
           </button>
@@ -213,86 +213,8 @@ const FormationDetail: React.FC = () => {
         </div>
       </div>
 
-      <ModalBase
-        isOpen={isModalOpen}
-        onClose={() => {
-          setIsModalOpen(false);
-          setFormError(null);
-          setRefTransaction('');
-        }}
-        title="Inscription à la formation"
-        size="md"
-        footerContent={
-          <>
-            <button
-              onClick={() => {
-                setIsModalOpen(false);
-                setFormError(null);
-                setRefTransaction('');
-              }}
-              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-lg"
-            >
-              Annuler
-            </button>
-            <Button
-              onClick={handleInscription}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Envoi...' : 'Confirmer l\'inscription'}
-            </Button>
-          </>
-        }
-      >
-        <form onSubmit={handleInscription} className="space-y-4">
-          <div>
-            <label className="block text-md font-light text-gray-700">Nom de l'étudiant</label>
-            <input
-              type="text"
-              value={user?.lastname || 'Utilisateur'}
-              disabled
-              className="mt-1 block bg-white rounded-md text-gray-800"
-            />
-          </div>
-          <div>
-            <label className="block text-md font-light text-gray-700">Formation</label>
-            <input
-              type="text"
-              value={formation?.title || ''}
-              disabled
-              className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-800"
-            />
-          </div>
-          <div>
-            <label className="block text-md font-light text-gray-700">Prix</label>
-            <input
-              type="text"
-              value={`${formation?.parametre_formation_id?.price || 0} Ar`}
-              disabled
-              className="mt-1 block w-full rounded-md border-gray-300 bg-white text-gray-800"
-            />
-          </div>
-          <div>
-            <p className="text-md text-gray-700">
-              Veuillez envoyer via Mvola, par le numéro suivant : <strong>0345929075 : Mikaia David</strong>
-            </p>
-          </div>
-          <div>
-            <label className="block text-md font-light text-gray-700">Référence de transaction</label>
-            <input
-              type="text"
-              value={refTransaction}
-              onChange={(e) => setRefTransaction(e.target.value)}
-              placeholder="Entrez la référence de transaction Mvola"
-              className="mt-1 p-2 block w-64 rounded-md border-gray-400 shadow-sm focus:border-blue-500 outline-none border focus:ring-blue-500 text-black"
-              required
-            />
-          </div>
-          {formError && <p className="text-red-500 text-sm">{formError}</p>}
-        </form>
-      </ModalBase>
     </section>
   );
 };
 
-export default FormationDetail;
+export default FormationDetailLanding;

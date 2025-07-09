@@ -4,7 +4,9 @@ import myImage from "../../assets/info.jpg"
 
 const About: React.FC = () => {
     return (
-        <section className="min-h-[85vh] mt-16 rounded-2xl flex items-center flex-col bg-gradient-to-br from-blue-700 to-violet-600 text-white">
+        <section data-aos="fade-up"
+     data-aos-anchor-placement="bottom-center"
+         className="min-h-[85vh] mt-16 rounded-2xl flex items-center flex-col bg-gradient-to-br from-blue-700 to-violet-600 text-white">
            
            <span className="bg-blue-700 p-2 mr-[15.9em] absolute rounded-tr-2xl z-[1]"></span>
            <span className="bg-slate-200 p-2 mr-[15.9em] absolute"></span>

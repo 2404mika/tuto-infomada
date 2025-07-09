@@ -1,6 +1,8 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HeroSection: React.FC = () => {
+  const navigate = useNavigate()
   return (
     <section
       className="min-h-[85vh] mt-16 rounded-2xl flex items-center  shadow-2xl bg-gradient-to-br from-blue-700 to-violet-600 text-white" // pt-16 pour compenser le header fixe
@@ -13,14 +15,14 @@ const HeroSection: React.FC = () => {
         <p className="max-w-2xl mx-auto text-lg sm:text-xl text-slate-100 mb-10 font-light">
           Formation en ligne interactive, flexible et certifiante pour atteindre vos objectifs professionnels.
         </p>
-        <a
-          href="#inscription"
+        <button
+          onClick={() => navigate("/login")}
           className="bg-blue-900 text-white font-semibold px-8 py-3 rounded-lg text-lg shadow-lg hover:bg-blue-700
           transition-colors duration-300 transform hover:scale-105"
           role="button"
         >
           Je m'inscris maintenant
-        </a>
+        </button>
       </div>
     </section>
   );

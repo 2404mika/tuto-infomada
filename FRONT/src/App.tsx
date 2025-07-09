@@ -21,17 +21,42 @@ import AdminDashboard from './components/admin/dashboard/DashboardAdmin';
 import LoginAdmin from './components/auth/LoginAdmin';
 import ProfLogin from './components/auth/LoginProf';
 import ProfStudents from './components/Prof/ProfStudents';
+import FormationDetailLanding from './components/landing/DetailsFormLanding';
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from 'react';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 function App() {
+  useEffect(() => {
+    AOS.init({
+      duration: 1000, // Durée des animations en ms
+      once: true,     // Animation une seule fois
+    });
+  }, [])  
   return (
     <AuthProvider>
       <BrowserRouter>
+      <ToastContainer 
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
         <Routes>
           <Route path="/login" element={<LoginPage />} />
           <Route path="/LoginAdmin" element={<LoginAdmin />} />
           <Route path="/LoginProf" element={<ProfLogin />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/landing" element={<LandingPage />} />
+          <Route path="/formation/:id" element={<FormationDetailLanding />} />
           <Route path="/domaine/:id" element={<DomaineDetail />} />
           <Route path="/Alldomain" element={<AllDomains />} />
           <Route path="/About" element={<About />} />

@@ -155,9 +155,9 @@ const LoginForm: React.FC = () => {
         </div>
         <p className="mt-6 text-center text-gray-600 text-sm">
           Pas de compte ?{' '}
-          <Link href="/register" className="text-blue-600 hover:text-blue-800 font-medium">
+          <a onClick={()=> navigate("/register")} className="text-blue-600 hover:text-blue-800 font-medium cursor-pointer">
             S'inscrire
-          </Link>
+          </a>
         </p>
       </form>
     </div>
