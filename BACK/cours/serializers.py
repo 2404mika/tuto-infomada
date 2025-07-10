@@ -233,7 +233,7 @@ class FormationSimpleSerializer(serializers.ModelSerializer):
 #         return chapter
 
 class ChapterSerializer(serializers.ModelSerializer):
-    videos = VideoSerializer(many=True, required=False,read_only=True)
+    videos = VideoSerializer(many=True, required=False)
     formation = FormationSimpleSerializer(read_only=True, source='formation_id')
 
     class Meta:

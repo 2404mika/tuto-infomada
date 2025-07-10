@@ -594,7 +594,7 @@ const AddFormationModal: React.FC<AddFormationModalProps> = ({ isOpen, onClose, 
       });
 
       const data = await response.json();
-
+      console.log("Lasaaaaaaa", data)
       if (response.ok) {
         alert("Formation ajoutée avec succès !");
         onFormationAdded(data);
@@ -1201,14 +1201,14 @@ export default AddFormationModal;
 //             <Button
 //               type="button"
 //               onClick={onClose}
-//               className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+//               // className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
 //             >
 //               Annuler
 //             </Button>
 //             <Button
 //               type="submit"
 //               isLoading={isLoading}
-//               className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+//               // className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
 //             >
 //               {isLoading ? (isEditMode ? 'Modification...' : 'Ajout...') : (isEditMode ? 'Valider' : 'Ajouter')}
 //             </Button>

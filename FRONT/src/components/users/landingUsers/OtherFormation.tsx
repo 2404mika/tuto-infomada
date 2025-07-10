@@ -260,16 +260,185 @@
 //-------------------------------------------------------------------------------------------------------------------------------
 //-----------------------------------------------------------------------------------------------------------------------------------
 
+// import React, { useRef, useState, useEffect } from 'react';
+// import { useNavigate } from 'react-router-dom';
+// import { useAuth } from '../../context/AuthContext';
+// import { Formation } from '../../types';
+
+// interface MyFormation {
+//   id: number; // ID de Formation_by_user
+//   formation_id: number; // ID de la formation
+//   formation_title: string;
+//   status: string; // "Published" ou "Not published"
+// }
+
+// const OtherFormation: React.FC = () => {
+//   const sliderRef = useRef<HTMLDivElement>(null);
+//   const [formations, setFormations] = useState<Formation[]>([]);
+//   const [myFormations, setMyFormations] = useState<MyFormation[]>([]);
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+//   const navigate = useNavigate();
+//   const { accessToken, user } = useAuth();
+
+//   useEffect(() => {
+//     const fetchData = async () => {
+//       try {
+//         // Récupérer toutes les formations
+//         console.log('Récupération des formations disponibles');
+//         const formationsResponse = await fetch('http://localhost:8000/api/formation/', {
+//           method: 'GET',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//         });
+
+//         if (!formationsResponse.ok) {
+//           throw new Error(`Erreur HTTP ${formationsResponse.status}: Récupération des formations échouée`);
+//         }
+
+//         const formationsData = await formationsResponse.json();
+//         console.log('Formations reçues:', formationsData);
+//         setFormations(formationsData);
+
+//         // Récupérer les formations de l'étudiant connecté
+//         if (accessToken && user) {
+//           console.log('Récupération des formations de l\'étudiant:', user.email);
+//           const myFormationsResponse = await fetch('http://localhost:8000/api/formationByUserList/', {
+//             method: 'GET',
+//             headers: {
+//               'Content-Type': 'application/json',
+//               Authorization: `Bearer ${accessToken}`,
+//             },
+//           });
+
+//           if (!myFormationsResponse.ok) {
+//             if (myFormationsResponse.status === 401) {
+//               setError('Session expirée. Veuillez vous reconnecter.');
+//               return;
+//             }
+//             const errorData = await myFormationsResponse.json();
+//             throw new Error(errorData.error || `Erreur HTTP ${myFormationsResponse.status}: Récupération des inscriptions échouée`);
+//           }
+
+//           const myFormationsData = await myFormationsResponse.json();
+//           console.log('Mes formations reçues:', myFormationsData);
+//           setMyFormations(myFormationsData);
+//         } else {
+//           console.log('Utilisateur non connecté ou token manquant');
+//           setMyFormations([]);
+//         }
+
+//         setIsLoading(false);
+//       } catch (err: any) {
+//         setError(err.message || 'Impossible de charger les données');
+//         console.error('Erreur:', err);
+//         setIsLoading(false);
+//       }
+//     };
+
+//     fetchData();
+//   }, [accessToken, user]);
+
+//   const handleCardClick = (id: number) => {
+//     console.log('Clic sur la formation:', id);
+//     navigate(`/user/formation/${id}`);
+//   };
+
+//   const handleAccessClick = (formationByUserId: number, formationId: number) => {
+//     console.log('Accès à la formation:', formationId, 'formationByUserId:', formationByUserId);
+//     navigate(`/user/myformationDetail/${formationId}`, { state: { formationByUserId } });
+//   };
+
+//   // const handleInscriptionClick = (formationId: number) => {
+//   //   console.log('Inscription à la formation:', formationId);
+//   //   navigate(`/user/formation/${formationId}/inscription`);
+//   // };
+
+//   const isEnrolled = (formationId: number) => {
+//     const enrolled = myFormations.find((myFormation) => myFormation.formation_id === formationId && myFormation.status === 'Published');
+//     console.log(`Vérification inscription pour formation ${formationId}:`, enrolled);
+//     return enrolled;
+//   };
+
+//   return (
+//     <section className="min-h-[85vh] rounded-2xl flex flex-col items-center shadow-xl bg-slate-200 border border-blue-100 text-white p-8">
+//       <h1 className="font-semibold text-3xl text-gray-800">Nos formations disponibles</h1>
+
+//       <div className="relative w-full">
+//         <div className="flex gap-6 flex-wrap hide-scrollbar px-20">
+//           {isLoading ? (
+//             <p>Chargement...</p>
+//           ) : error ? (
+//             <p className="text-red-300">{error}</p>
+//           ) : formations.length === 0 ? (
+//             <p>Aucune formation disponible</p>
+//           ) : (
+//             formations.map((formation) => {
+//               const enrolledFormation = isEnrolled(formation.id);
+//               return (
+//                 <div
+//                   key={formation.id}
+//                   className="w-[250px] flex flex-col justify-between rounded-3xl bg-gray-100 mt-16 bg-center h-72 p-2 shadow-xl"
+//                   // onClick={() => handleCardClick(formation.id)}
+//                 >
+//                   <div className="flex flex-col">
+//                     <div className="w-full p-1">
+//                       <p className="text-m text-blue-900 font-semibold px-4 mb-5">{formation.title}</p>
+//                       <p className="text-gray-600 text-sm mt-2 px-4">{formation.description}</p>
+//                     </div>
+//                   </div>
+//                   <div className="flex justify-end p-3">
+//                     {enrolledFormation ? (
+//                       <button
+//                         className="p-2 rounded-xl w-full text-blue-800 font-medium border border-blue-800"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           handleAccessClick(enrolledFormation.id, formation.id);
+//                         }}
+//                       >
+//                         Accéder
+//                       </button>
+//                     ) : (
+//                       <button
+//                         className="bg-blue-800 p-2 rounded-xl w-full text-white"
+//                         onClick={(e) => {
+//                           e.stopPropagation();
+//                           handleCardClick(formation.id);
+//                         }}
+//                       >
+//                         Voir détails
+//                       </button>
+//                     )}
+//                   </div>
+//                 </div>
+//               );
+//             })
+//           )}
+//         </div>
+//       </div>
+//     </section>
+//   );
+// };
+
+// export default OtherFormation;
+
+
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+//---------------------------------------------------------------------------------------------------------------
+
+
 import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { Formation } from '../../types';
 
 interface MyFormation {
-  id: number; // ID de Formation_by_user
-  formation_id: number; // ID de la formation
+  id: number;
+  formation_id: number;
   formation_title: string;
-  status: string; // "Published" ou "Not published"
+  status: string;
 }
 
 const OtherFormation: React.FC = () => {
@@ -299,7 +468,9 @@ const OtherFormation: React.FC = () => {
 
         const formationsData = await formationsResponse.json();
         console.log('Formations reçues:', formationsData);
-        setFormations(formationsData);
+        // Filtrer les formations pour ne garder que celles avec status.value = 1
+        const publishedFormations = formationsData.filter((formation: Formation) => formation.status.value === 1);
+        setFormations(publishedFormations);
 
         // Récupérer les formations de l'étudiant connecté
         if (accessToken && user) {
@@ -350,15 +521,10 @@ const OtherFormation: React.FC = () => {
     navigate(`/user/myformationDetail/${formationId}`, { state: { formationByUserId } });
   };
 
-  // const handleInscriptionClick = (formationId: number) => {
-  //   console.log('Inscription à la formation:', formationId);
-  //   navigate(`/user/formation/${formationId}/inscription`);
-  // };
-
   const isEnrolled = (formationId: number) => {
     const enrolled = myFormations.find((myFormation) => myFormation.formation_id === formationId && myFormation.status === 'Published');
     console.log(`Vérification inscription pour formation ${formationId}:`, enrolled);
-    return enrolled;
+  return enrolled;
   };
 
   return (
@@ -380,7 +546,6 @@ const OtherFormation: React.FC = () => {
                 <div
                   key={formation.id}
                   className="w-[250px] flex flex-col justify-between rounded-3xl bg-gray-100 mt-16 bg-center h-72 p-2 shadow-xl"
-                  // onClick={() => handleCardClick(formation.id)}
                 >
                   <div className="flex flex-col">
                     <div className="w-full p-1">

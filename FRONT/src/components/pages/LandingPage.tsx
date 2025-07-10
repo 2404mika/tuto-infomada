@@ -2,6 +2,7 @@ import About from "../landing/About";
 import FormationCard from "../landing/FormationCard";
 import Header from "../landing/Header";
 import HeroSection from "../landing/HeroSection";
+import Contact from "../landing/Contact";
 
 const LandingPage: React.FC = () => {
     return (
@@ -15,6 +16,7 @@ const LandingPage: React.FC = () => {
                     <HeroSection />
                     <FormationCard />
                     <About />
+                    <Contact/>
                 </section>
             </main>
             

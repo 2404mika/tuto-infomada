@@ -6,7 +6,7 @@ const LoginPage: React.FC = () => {
   return (
     <AuthLayout 
       title="Bon retour parmis nous"
-      subtitle="Connectez-vous pour accéder à vos cours."
+      subtitle="Connectez-vous pour accéder à vos cours." 
     >
       <LoginForm />
     </AuthLayout>
