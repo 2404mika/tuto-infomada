@@ -503,7 +503,7 @@ class FormationByUserReadSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Formation_by_user
-        fields = ['id', 'user_id', 'formation_id', 'formation_title', 'status', 'payment', 'student_name']
+        fields = ['id', 'user_id', 'formation_id', 'formation_title', 'status', 'payment', 'student_name',]
 
 
 

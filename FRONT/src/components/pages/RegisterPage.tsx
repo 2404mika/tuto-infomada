@@ -6,7 +6,7 @@ const RegisterPage: React.FC = () => {
   return (
     <AuthLayout 
       title="Rejoingnez notre communauté d'apprenants"
-      subtitle="Créer votre compte pour créer nos cours" 
+      subtitle="Créer votre compte pour suivre nos cours" 
     >
       <RegisterForm />
     </AuthLayout>

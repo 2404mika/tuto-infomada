@@ -10,6 +10,7 @@ interface Payment {
 interface FormationByUser {
   id: number;
   user_id: string; // username
+  email: string;
   formation_title: string; // title
   status: string;
   payment?: Payment;
@@ -154,6 +155,7 @@ const AdminFormationApproval: React.FC = () => {
                   className="bg-white border border-gray-200 rounded-3xl p-4 shadow-md font-normal text-slate-800"
                 >
                   <p className='mb-1'><span className='font-light'>Nom de l'étudiant : </span>{formation.student_name}</p>
+                  <p className='mb-1'><span className='font-light'>Nom de l'étudiant : </span>{formation.user_id}</p>
                   <p className='mb-1'><span className='font-light'>Titre de la formation : </span>{formation.formation_title}</p>
                   <p className='mb-1'><span className='font-light'>Référence de transaction : </span>{formation.payment?.ref_transaction || 'N/A'}</p>
                   <p className='mb-1'><span className='font-light'>Montant payé : </span>{formation.payment?.paid_amount || 'N/A'}</p>

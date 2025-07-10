@@ -102,7 +102,7 @@ class Formation_by_user(models.Model):
     status = models.ForeignKey(Status, on_delete=models.SET_DEFAULT, default=0, related_name='inscriptions') # Par défaut : not_confirmed
 
     def __str__(self):
-        return f"{self.user_id.username} - {self.formation_id.title}"
+        return f"{self.user_id.email} - {self.formation_id.title}"
 
 
 class Payment(models.Model):

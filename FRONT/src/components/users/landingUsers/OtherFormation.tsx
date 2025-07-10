@@ -534,7 +534,7 @@ const OtherFormation: React.FC = () => {
       <div className="relative w-full">
         <div className="flex gap-6 flex-wrap hide-scrollbar px-20">
           {isLoading ? (
-            <p>Chargement...</p>
+            <p className='text-blue-800 font-medium'>Chargement...</p>
           ) : error ? (
             <p className="text-red-300">{error}</p>
           ) : formations.length === 0 ? (

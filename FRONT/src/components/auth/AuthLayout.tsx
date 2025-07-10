@@ -21,16 +21,16 @@ const AuthLayout: React.FC<AuthLayoutProps> = ({ children, title, subtitle }) =>
         
         <div className="mb-auto">
           <h1 className="text-4xl font-bold mb-6">Développez vos connaissances avec nos cours en ligne</h1>
-          <p className="text-lg text-blue-100 mb-8">Transformez vos ambitions en réalité avec l'accompagnement de nos formateurs passionnés</p>
+          <p className="text-lg text-blue-100 mb-8">Transformez vos ambitions en réalité avec l'accompagnement de nos formateurs passionnés.</p>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
               <h3 className="text-xl font-semibold mb-2">Apprenez à vos rythmes</h3>
-              <p className="text-blue-100">Accédez aux cours à tout moment, n'importe où, et apprenez selon votre propre emploi du temps</p>
+              <p className="text-blue-100">Accédez aux cours à tout moment, n'importe où, et apprenez selon votre propre emploi du temps.</p>
             </div>
             <div className="bg-white/10 backdrop-blur-sm p-6 rounded-xl">
               <h3 className="text-xl font-semibold mb-2">Instructeurs experts</h3>
-              <p className="text-blue-100">Apprenez auprès de INFOMADA ayant des années d'expériences</p>
+              <p className="text-blue-100">Apprenez auprès de INFOMADA ayant des années d'expériences.</p>
             </div>
           </div>
         </div>

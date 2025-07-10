@@ -133,7 +133,10 @@ const MyFormation: React.FC = () => {
               {formation.created_at && (
                 <p className="text-gray-700"><strong>Date :</strong> {formation.created_at}</p>
               )}
-              <p className="text-green-700 font-semibold text-sm"><span className={formation.status === 'Not published' ?'text-red-500':'text-green-500'}>{formation.status === 'Not published' ? 'En attente...' : 'Actif'}</span>
+              <p className="text-green-700 font-semibold text-sm mb-2"><span className={formation.status === 'Not published' ?'text-red-500':'text-green-500'}>{formation.status === 'Not published' ? 'En attente...' : 'Actif'}</span>
+                
+              </p>
+              <p className="text-green-700 font-semibold text-sm"><span className={formation.status === 'Not published' ?'text-gray-400':'text-green-500'}>{formation.status === 'Not published' ? '(Veuillez nous contacter si non approuvée dans les 12 heures : 0345929075)' : ''}</span>
                 
               </p>
               </div>
